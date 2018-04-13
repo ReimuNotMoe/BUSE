@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "buse.h"
+#include "../buse.h"
 
 static void *data;
 static int xmpl_debug = 1;

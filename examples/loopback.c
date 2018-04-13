@@ -28,7 +28,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "buse.h"
+#include "../buse.h"
 
 static int fd;
 
