@@ -20,12 +20,12 @@ user.
 
 ## Running the Example Code
 
-BUSE comes with an example driver in `busexmp.c` that implements a 128 MB
+BUSE comes with an example driver in `busexmp.c` that implements a
 memory disk. To try out the example code, run `make` and then execute the
 following as root:
 
     modprobe nbd
-    ./busexmp /dev/nbd0
+    ./busexmp 128M /dev/nbd0
 
 You should then have an in-memory disk running, represented by the device file
 `/dev/nbd0`. You can create a file system on the virtual disk, mount it, and
@@ -33,3 +33,27 @@ start reading and writing files on it:
 
     mkfs.ext4 /dev/nbd0
     mount /dev/nbd0 /mnt
+
+BUSE should gracefuly disconnect from block device upon receiving SIGINT
+or SIGTERM. However, if something goes wrong, block device is stuck in
+unusable state and BUSE process exited or hung you can request
+disconnect by:
+
+    nbd-client -d /dev/nbd0
+
+Actually this command performs clean disconnect and can also be used
+to terminate running instance of BUSE.
+
+## Tests
+
+To perform checks you can run scripts in `test/` directory. They require:
+ * superuser previlages,
+ * nbd kernel module loaded,
+ * BUSE and nbd (`nbd-client`) binaries in PATH.
+
+`make test` will run all test scripts with BUSE added to PATH and using
+sudo to grant permissions.
+
+To increase verbosity define `BUSE_DEBUG`. You can do this in make command:
+
+    make test CFLAGS=-DBUSE_DEBUG
